@@ -29,6 +29,7 @@ public class BaseClass {
 	public ExtentReports ER;
 	public ExtentTest logger;
 
+	/*this is a comment for github*/
 	@BeforeClass
 	public void setup() {
 		Reporter.log("Browser is getting ready", true);
