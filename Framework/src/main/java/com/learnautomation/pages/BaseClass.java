@@ -11,6 +11,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Parameters;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -29,11 +30,13 @@ public class BaseClass {
 	public ExtentReports ER;
 	public ExtentTest logger;
 
-	/*this is a comment for github*/
+	/* this is a comment for github */
+	@Parameters({"browser","url"}) //should match with POM variable{}
 	@BeforeClass
-	public void setup() {
+	public void setup(String browser,String url) {
 		Reporter.log("Browser is getting ready", true);
-		driver = BrowserFactory.startApplication(c.getBrowser(), c.getURL(), driver);
+		//driver = BrowserFactory.startApplication(c.getBrowser(), c.getURL(), driver);
+		driver = BrowserFactory.startApplication(browser,url,driver);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3000));
 		System.out.println("The browser has successfully launched by " + c.getDataFromConfig("FirstName"));
@@ -48,7 +51,7 @@ public class BaseClass {
 	@BeforeSuite
 	public void setupSuite() {
 
-		Reporter.log("Suite set up is getting ready", true);//true also shows in console
+		Reporter.log("Suite set up is getting ready", true);// true also shows in console
 		e = new ExcelDataProvider();
 		c = new ConfigDataProvider();
 
@@ -83,7 +86,7 @@ public class BaseClass {
 			}
 		} else if (result.getStatus() == ITestResult.SUCCESS) {
 			Helper.takesScreentshot(driver);
-		try {
+			try {
 				logger.fail("Test Passed",
 						MediaEntityBuilder.createScreenCaptureFromPath(Helper.takesScreentshot(driver)).build());
 			} catch (IOException e) {
@@ -91,7 +94,7 @@ public class BaseClass {
 			}
 
 		}
-		
+
 		ER.flush();
 		Reporter.log("Test is completed and reports is generated", true);
 
